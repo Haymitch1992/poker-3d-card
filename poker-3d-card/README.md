@@ -1,14 +1,12 @@
 # poker-3d-card
 
-## Description
-
 ## Install
 
 ```bash
 yarn add poker-3d-card
 ```
 
-## Usage
+## usage
 
 main.js
 
@@ -24,7 +22,7 @@ app.use(Poker); //注册
 app.mount("#app");
 ```
 
-## Example
+## example
 
 ```vue
 <template>

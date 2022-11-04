@@ -532,10 +532,10 @@ pify@^4.0.1:
   resolved "https://registry.npmjs.org/pify/-/pify-4.0.1.tgz#4b2cd25c50d598735c50292224fd8c6df41e3231"
   integrity sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==
 
-poker-3d-card@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/poker-3d-card/-/poker-3d-card-1.0.1.tgz#c0c92a1fce5587b771f9c53879e1d127d92c3344"
-  integrity sha512-HNbQPqdbGYuOY6TfYtDswswIZRu5pofhUlpCafGP1tNMS1PB1EpMmURIbFC1Bczw46t7rs50ntEvQIpwGbm5Qg==
+poker-3d-card@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/poker-3d-card/-/poker-3d-card-1.0.3.tgz#3b75afe20307e6805420c4ae60272abc1b8f35bf"
+  integrity sha512-/kRvsk+glm1YA/EHE6wRHWXYDqt3SaRaKKQNze1bzeI2hgawoDEKyopAaCGiD2O1QIXLVzRt5TDZbgiNodxObQ==
 
 postcss@^8.1.10, postcss@^8.4.18:
   version "8.4.18"

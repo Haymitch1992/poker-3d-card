@@ -3,36 +3,18 @@ import { reactive, ref, onMounted } from 'vue';
 defineOptions({
   name: 'Poker3dCard',
 });
+// 自定义卡片样式
 const card = ref();
-const cardwrapper = ref();
-const cardData = reactive({
-  x: 100,
-  y: 100,
-  rX: 26,
-  rY: 26,
-  bgX: 40,
-  bgY: 40,
-});
 onMounted(() => {
   const el = card._value;
-  const wrap = cardwrapper._value;
-  // const el = document.querySelector('.card');
-  // const wrap = document.querySelector('.card__wrapper');
+  const wrap = document.querySelector('.card__wrapper');
   let w = el.clientWidth;
   let h = el.clientHeight;
   let b = el.getBoundingClientRect();
+
   el.addEventListener('mousemove', (e) => {
     let X = (e.clientX - b.left) / w;
     let Y = (e.clientY - b.top) / h;
-
-    cardData.rX = -(X - 0.5) * 26;
-    cardData.rY = (Y - 0.5) * 26;
-
-    cardData.bgX = 40 + 20 * X;
-    cardData.bgY = 40 + 20 * Y;
-
-    cardData.x = 100 * X;
-    cardData.y = 100 * Y;
 
     let rX = -(X - 0.5) * 26;
     let rY = (Y - 0.5) * 26;
@@ -41,26 +23,37 @@ onMounted(() => {
     let bgY = 40 + 20 * Y;
 
     console.log(X, Y);
+    card._value.style.setProperty('--x', 100 * X + '%');
+    card._value.style.setProperty('--y', 100 * Y + '%');
 
-    document.documentElement.style.setProperty('--x', 100 * X + '%');
-    document.documentElement.style.setProperty('--y', 100 * Y + '%');
+    card._value.style.setProperty('--bg-x', bgX + '%');
+    card._value.style.setProperty('--bg-y', bgY + '%');
 
-    document.documentElement.style.setProperty('--bg-x', bgX + '%');
-    document.documentElement.style.setProperty('--bg-y', bgY + '%');
-
-    document.documentElement.style.setProperty('--r-x', rX + 'deg');
-    document.documentElement.style.setProperty('--r-y', rY + 'deg');
+    card._value.style.setProperty('--r-x', rX + 'deg');
+    card._value.style.setProperty('--r-y', rY + 'deg');
+  });
+  el.addEventListener('mouseleave', (e) => {
+    // 重置属性
+    card._value.style.setProperty('--x', null);
+    card._value.style.setProperty('--y', null);
+    card._value.style.setProperty('--bg-x', null);
+    card._value.style.setProperty('--bg-y', null);
+    card._value.style.setProperty('--r-x', null);
+    card._value.style.setProperty('--r-y', null);
   });
 });
 </script>
 
 <template>
-  <div class="container">
-    <div class="card" ref="card">
-      <div class="card__wrapper" ref="cardwrapper">
+  <div class="container" id="root">
+    <div class="card root" ref="card">
+      <div class="card__wrapper">
         <div class="card__3d">
           <div class="card__image">
-            <slot></slot>
+            <img src="../../assets/bg.jpg" alt="" />
+            <div class="content">
+              <slot></slot>
+            </div>
           </div>
           <div class="card__layer1"></div>
           <div class="card__layer2"></div>
@@ -71,8 +64,12 @@ onMounted(() => {
 </template>
 
 <style lang="less" scoped>
-:root {
+body {
+  padding: 100px 0 0 100px;
+}
+.root {
   --step: 5%;
+  --pattern: url('../../assets/pattern.webp') center / 75%;
 
   --rainbow: repeating-linear-gradient(
       0deg,
@@ -103,92 +100,86 @@ onMounted(() => {
     )
     var(--bg-x) var(--bg-y) / 300%;
 }
-.container {
-  .card {
-    width: 380px;
-    height: 467px;
-    box-sizing: border-box;
-    position: relative;
-  }
-  .card__wrapper {
-    perspective: 600px;
-    position: absolute;
-    inset: 0;
-  }
-  .card__3d {
-    transform: rotateY(var(--r-x)) rotateX(var(--r-y));
-    position: absolute;
-    inset: 0;
-    clip-path: inset(0 0 0 0 round 48px);
-  }
-  .card__image {
-    clip-path: inset(0 0 0 0 round 48px);
-    background: #015f01;
-    // background: repeating-linear-gradient(
-    //   45deg,
-    //   #015f01,
-    //   #015f01 35px,
-    //   #077407 35px,
-    //   #077407 70px
-    // );
-    cursor: pointer;
-    height: 300px;
-    width: 200px;
-  }
-  .card__image img {
-    display: block;
-    max-width: 100%;
-    max-height: 100%;
-  }
+.card {
+  width: 380px;
+  height: 467px;
+  box-sizing: border-box;
+  position: relative;
+  cursor: pointer;
+}
+.card__wrapper {
+  perspective: 600px;
+  position: absolute;
+  inset: 0;
+}
+.card__3d {
+  transform: rotateY(var(--r-x)) rotateX(var(--r-y));
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 0 0 0 round 48px);
+}
 
-  /* soft light */
-  .card__layer1 {
-    position: absolute;
-    inset: 0;
-    z-index: 20;
-    mix-blend-mode: soft-light;
-    clip-path: inset(0 0 1px 0 round 48px);
-    background: radial-gradient(
-      farthest-corner circle at var(--x) var(--y),
-      rgba(255, 255, 255, 0.8) 10%,
-      rgba(255, 255, 255, 0.65) 20%,
-      rgba(255, 255, 255, 0) 90%
-    );
-  }
-  /* first crazy blend  */
-  .card__layer2 {
-    position: absolute;
-    inset: 0;
-    z-index: 30;
+.card__image {
+  clip-path: inset(0 0 0 0 round 48px);
+  position: relative;
+  display: block;
+  width: 380px;
+  height: 467px;
+}
+.card__image .content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 380px;
+  height: 467px;
+}
+.card__image img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  width: 380px;
+  height: 467px;
+}
+/* soft light */
+.card__layer1 {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  mix-blend-mode: soft-light;
+  clip-path: inset(0 0 1px 0 round 48px);
+  background: radial-gradient(
+    farthest-corner circle at var(--x) var(--y),
+    rgba(255, 255, 255, 0.8) 10%,
+    rgba(255, 255, 255, 0.65) 20%,
+    rgba(255, 255, 255, 0) 90%
+  );
+}
+/* first crazy blend  */
+.card__layer2 {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
 
-    mix-blend-mode: color-dodge;
-    will-change: background;
-    transition-property: opacity;
-    clip-path: inset(0 0 1px 0 round 48px);
+  mix-blend-mode: color-dodge;
+  will-change: background;
+  transition-property: opacity;
+  clip-path: inset(0 0 1px 0 round 48px);
 
-    background-blend-mode: hue, hue, hard-light, overlay;
-    background: url('http://allyourhtml.club/carousel/pattern.webp') center /
-        75%,
-      var(--rainbow), var(--diagonal);
-  }
-  /* second crazy blend  */
-  .card__layer2:after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: url('http://allyourhtml.club/carousel/pattern.webp') center /
-        75%,
-      var(--rainbow), var(--diagonal), var(--shade);
-    mix-blend-mode: exclusion;
-    background-size: 75%, 200% 400%, 800%, 200%;
-    background-position: center, 0% var(--bg-y),
-      calc(var(--bg-x) * -1) calc(var(--bg-y) * -1), var(--bg-x) var(--bg-y);
-    background-blend-mode: soft-light, hue, hard-light;
-  }
-  .card {
-    width: 200px;
-    height: 300px;
-    border-radius: 8px;
-  }
+  background-blend-mode: hue, hue, hard-light, overlay;
+  background: var(--pattern), var(--rainbow), var(--diagonal);
+}
+/* second crazy blend  */
+.card__layer2:after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--pattern), var(--rainbow), var(--diagonal), var(--shade);
+  mix-blend-mode: exclusion;
+  background-size: 75%, 200% 400%, 800%, 200%;
+  background-position: center, 0% var(--bg-y),
+    calc(var(--bg-x) * -1) calc(var(--bg-y) * -1), var(--bg-x) var(--bg-y);
+  background-blend-mode: soft-light, hue, hard-light;
 }
 </style>
